@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>GraphQL</title>
 
+    <link rel="shortcut icon" href="#" />
+
     <link rel="stylesheet" href="styles/dist/css/reset.min.css" />
     <link rel="stylesheet" href="styles/dist/css/index.min.css" />
     <script src="js/main.js" type="module" defer></script>
@@ -13,7 +15,15 @@
 
   <body>
     <div class="root">
-      <h1>TERE</h1>
+      <h1><span class="username"></span> user profile</h1>
+      <section class="grid-container">
+        <div class="chart"></div>
+        <div class="chart"></div>
+        <div class="chart-exp">
+          <div>Level: <span class="level"></span></div>
+          <div>Exp to next level: <span class="exp-left">200</span>xp</div>
+        </div>
+      </section>
     </div>
   </body>
 </html>

@@ -1,5 +1,5 @@
-// fetchGraphql using async/await method
-const fetchGraphql = async (url, query, variables) => {
+// fetchGraphql fetches provided query from graphql using async/await method
+export const fetchGraphql = async (url, query, variables) => {
   try {
     const res = await fetch(url, {
       method: "POST",
@@ -19,37 +19,21 @@ const fetchGraphql = async (url, query, variables) => {
   }
 };
 
-// const handleError = (response) => {
-//   if (!response.ok) {
-//     throw Error(response.statusText);
-//   }
-//   console.log("Query was successful");
-//   return response.json();
-// };
+// fetchAllDataRecursive fetches all data from graphql recursively because graphql payload length cannot be over 50
+export const fetchAllDataRecursive = async (
+  URL,
+  query,
+  variables,
+  table,
+  arr = []
+) => {
+  const data = await fetchGraphql(URL, query, variables);
+  arr = [...arr, ...data.data.user[0][table]];
 
-// Using .then chaining
-// const fetchGraphql = async (url, query, variables) => {
-//   fetch(url, {
-//     method: "POST",
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//     body: JSON.stringify({
-//       query,
-//       variables,
-//     }),
-//   })
-//     .then((res) => {
-//       return handleError(res);
-//     })
-//     .then((data) => {
-//       console.log(data);
-//       return data;
-//     })
-//     .catch((err) => {
-//       console.log(err);
-//       return {};
-//     });
-// };
-
-export default fetchGraphql;
+  if (data.data.user[0][table].length === 50) {
+    variables.start += 50;
+    return fetchAllDataRecursive(URL, query, variables, table, arr);
+  } else {
+    return arr;
+  }
+};

@@ -1,18 +1,38 @@
-import fetchGraphql from "./fetch.js";
+import { USERNAME } from "./constants.js";
+import { calculateLevel, levelNeededXP } from "./calculate.js";
+import fetchTransactions from "./fetchTransactions.js";
+import fetchProgresses from "./fetchProgresses.js";
+import { lorem } from "./data.js";
 
-const URL = "https://01.kood.tech/api/graphql-engine/v1/graphql";
-const USERNAME = "kasparp";
+(async () => {
+  const transactions = await fetchTransactions();
+  console.log(transactions);
+  const progresses = await fetchProgresses();
+  console.log(progresses);
 
-let query = `query ($username: String) {
-  user(where: { login: { _eq: $username }}) {
-    id
-    login
-  }
-}`;
+  let xpAmount = progresses.reduce((prev, curr) => {
+    const transaction = transactions.find(
+      (obj) => obj.objectId === curr.objectId
+    );
+    return prev + transaction.amount;
+  }, 0);
+  // console.log(xpAmount);
 
-let variables = {
-  username: USERNAME,
-};
+  const level = calculateLevel(xpAmount);
+  // console.log(level);
 
-let result = await fetchGraphql(URL, query, variables);
-console.log(result);
+  const expNeeded = levelNeededXP(level + 1);
+  // console.log(expNeeded);
+
+  const usernameDOM = document.querySelector(".username");
+  usernameDOM.textContent = USERNAME;
+
+  const chartsDOM = document.querySelectorAll(".chart");
+  chartsDOM.forEach((el) => (el.textContent = lorem));
+
+  const levelDOM = document.querySelector(".level");
+  levelDOM.textContent = level;
+
+  const expLeftDOM = document.querySelector(".exp-left");
+  expLeftDOM.textContent = expNeeded - xpAmount;
+})();

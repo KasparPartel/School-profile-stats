@@ -2,5 +2,27 @@
   width: 100%;
   height: 100vh;
 
-  background-color: darkslategrey;
+  padding: 20%;
+}
+
+.grid-container {
+  display: grid;
+
+  grid-template-columns: [first] 1fr [second] 1fr [end];
+  grid-template-rows: [first] 1fr [second] 1fr [end];
+}
+
+.chart-exp {
+  grid-column: first / end;
+  grid-row: second / end;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  width: 100%;
+  height: 30px;
+  padding: 0 10px;
+
+  background-color: red;
 }
