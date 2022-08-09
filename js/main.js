@@ -6,23 +6,20 @@ import { lorem } from "./data.js";
 
 (async () => {
   const transactions = await fetchTransactions();
-  console.log(transactions);
   const progresses = await fetchProgresses();
-  console.log(progresses);
 
-  let xpAmount = progresses.reduce((prev, curr) => {
+  let expAmount = progresses.reduce((prev, curr) => {
     const transaction = transactions.find(
       (obj) => obj.objectId === curr.objectId
     );
     return prev + transaction.amount;
   }, 0);
-  // console.log(xpAmount);
 
-  const level = calculateLevel(xpAmount);
-  // console.log(level);
+  const level = calculateLevel(expAmount);
 
   const expNeeded = levelNeededXP(level + 1);
-  // console.log(expNeeded);
+  const expInLevel = expNeeded - levelNeededXP(level);
+  const expInProcent = 100 - Math.round(expInLevel / (expNeeded - expAmount));
 
   const usernameDOM = document.querySelector(".username");
   usernameDOM.textContent = USERNAME;
@@ -34,5 +31,8 @@ import { lorem } from "./data.js";
   levelDOM.textContent = level;
 
   const expLeftDOM = document.querySelector(".exp-left");
-  expLeftDOM.textContent = expNeeded - xpAmount;
+  expLeftDOM.textContent = expNeeded - expAmount;
+
+  const expFillerDOM = document.querySelector(".exp-filler");
+  expFillerDOM.style.width = `${expInProcent}%`;
 })();
