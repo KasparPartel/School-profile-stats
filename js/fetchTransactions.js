@@ -20,7 +20,7 @@ const variables = {
 
 const regex = /\bpiscine-go/;
 
-const fetchTransactions = async () => {
+const fetchTransactions = async (onlyHighest) => {
   let results = await fetchAllDataRecursive(
     URL,
     query,

@@ -8,31 +8,36 @@ import { lorem } from "./data.js";
   const transactions = await fetchTransactions();
   const progresses = await fetchProgresses();
 
-  let expAmount = progresses.reduce((prev, curr) => {
-    const transaction = transactions.find(
-      (obj) => obj.objectId === curr.objectId
-    );
-    return prev + transaction.amount;
-  }, 0);
-
-  const level = calculateLevel(expAmount);
-
-  const expNeeded = levelNeededXP(level + 1);
-  const expInLevel = expNeeded - levelNeededXP(level);
-  const expInProcent = 100 - Math.round(expInLevel / (expNeeded - expAmount));
-
-  const usernameDOM = document.querySelector(".username");
-  usernameDOM.textContent = USERNAME;
-
+  // Populates chart with placeholder lorem ipsum
   const chartsDOM = document.querySelectorAll(".chart");
   chartsDOM.forEach((el) => (el.textContent = lorem));
 
-  const levelDOM = document.querySelector(".level");
-  levelDOM.textContent = level;
+  expToNextLevelChart();
 
-  const expLeftDOM = document.querySelector(".exp-left");
-  expLeftDOM.textContent = expNeeded - expAmount;
+  async function expToNextLevelChart() {
+    let expAmount = progresses.reduce((prev, curr) => {
+      const transaction = transactions.find(
+        (obj) => obj.objectId === curr.objectId
+      );
+      return prev + transaction.amount;
+    }, 0);
 
-  const expFillerDOM = document.querySelector(".exp-filler");
-  expFillerDOM.style.width = `${expInProcent}%`;
+    const level = calculateLevel(expAmount);
+
+    const expNeeded = levelNeededXP(level + 1);
+    const expInLevel = expNeeded - levelNeededXP(level);
+    const expInProcent = 100 - Math.round(expInLevel / (expNeeded - expAmount));
+
+    const usernameDOM = document.querySelector(".username");
+    usernameDOM.textContent = USERNAME;
+
+    const levelDOM = document.querySelector(".level");
+    levelDOM.textContent = level;
+
+    const expLeftDOM = document.querySelector(".exp-left");
+    expLeftDOM.textContent = expNeeded - expAmount;
+
+    const expFillerDOM = document.querySelector(".exp-filler");
+    expFillerDOM.style.width = `${expInProcent}%`;
+  }
 })();
