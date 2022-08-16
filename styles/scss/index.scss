@@ -7,13 +7,18 @@
   height: 100vh;
 
   padding: 20%;
+
+  h1 {
+    font-size: 4em;
+  }
 }
 
 .grid-container {
   display: grid;
 
   grid-template-columns: [first] 1fr [second] 1fr [end];
-  grid-template-rows: [first] 1fr [second] 1fr [end];
+  grid-auto-rows: max-content;
+  // grid-template-rows: [first] 1fr [second] 1fr [end];
 }
 
 .chart-exp {
