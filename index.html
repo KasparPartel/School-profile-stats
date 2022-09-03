@@ -10,6 +10,7 @@
 
     <link rel="stylesheet" href="styles/dist/css/reset.min.css" />
     <link rel="stylesheet" href="styles/dist/css/index.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js" defer></script>
     <script src="js/main.js" type="module" defer></script>
   </head>
 
@@ -18,7 +19,9 @@
       <h1><span class="username"></span> user profile</h1>
       <section class="grid-container">
         <div class="chart"></div>
-        <div class="chart"></div>
+        <div class="chart-progress">
+          <canvas id="chart-progress"></canvas>
+        </div>
         <div class="chart-exp">
           <div class="exp-filler"></div>
           <div class="info">Level: <span class="level"></span></div>

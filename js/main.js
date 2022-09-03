@@ -13,6 +13,7 @@ import { lorem } from "./data.js";
   chartsDOM.forEach((el) => (el.textContent = lorem));
 
   expToNextLevelChart();
+  progressChart();
 
   async function expToNextLevelChart() {
     let expAmount = progresses.reduce((prev, curr) => {
@@ -21,6 +22,7 @@ import { lorem } from "./data.js";
       );
       return prev + transaction.amount;
     }, 0);
+    console.log(`${expAmount}xp`);
 
     const level = calculateLevel(expAmount);
 
@@ -40,4 +42,74 @@ import { lorem } from "./data.js";
     const expFillerDOM = document.querySelector(".exp-filler");
     expFillerDOM.style.width = `${expInProcent}%`;
   }
+
+  async function progressChart() {
+    let ctx = document.querySelector("#chart-progress").getContext("2d");
+
+    const myChart = new Chart(ctx, {
+      type: "bar",
+      data: {
+        datasets: [
+          {
+            label: "Levels over time",
+            data: [
+              { id: "Sales", nested: { value: 1500 } },
+              { id: "Purchases", nested: { value: 500 } },
+            ],
+            borderWidth: 1,
+          },
+        ],
+      },
+      options: {
+        parsing: {
+          xAxisKey: "id",
+          yAxisKey: "nested.value",
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+          },
+        },
+      },
+    });
+  }
 })();
+
+/*  // Generator for generating chart labels
+    function* arrGenerator(start = 0, inc = 50000, limit = 578575) {
+      let i = start;
+      yield start;
+      while (i < limit) {
+        i += inc;
+        if (i > limit) {
+          yield limit;
+          return;
+        }
+        yield i;
+      }
+    }
+
+    const labels = [...arrGenerator()];
+
+    const data = {
+      labels,
+      datasets: [
+        {
+          label: "my first dataset",
+          backgroundColor: "rgb(255, 99, 132)",
+          borderColor: "rgb(255, 99, 132)",
+          data: [0, 10, 5, 2, 20, 30, 45],
+        },
+      ],
+    };
+
+    const config = {
+      type: "line",
+      data,
+      options: {},
+    };
+    const myChart = new chartsDOM(
+      document.querySelector(".progress-chart"),
+      config
+    );
+    console.log(labels); */
