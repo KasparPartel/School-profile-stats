@@ -1,2 +1,2 @@
-1. Levels over time
-2. XP earned in a time period (progress over time)
+1. XP earned in a time period (progress over time)
+2. Levels over time

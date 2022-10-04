@@ -9,8 +9,8 @@ import { lorem } from "./data.js";
   const progresses = await fetchProgresses();
 
   // Populates chart with placeholder lorem ipsum
-  const chartsDOM = document.querySelectorAll(".chart");
-  chartsDOM.forEach((el) => (el.textContent = lorem));
+  // const chartsDOM = document.querySelectorAll(".chart");
+  // chartsDOM.forEach((el) => (el.textContent = lorem));
 
   expToNextLevelChart();
   progressChart();
@@ -44,17 +44,41 @@ import { lorem } from "./data.js";
   }
 
   async function progressChart() {
-    let ctx = document.querySelector("#chart-progress").getContext("2d");
+    let monthsProgress = {
+      sep: 0,
+      oct: 0,
+      nov: 0,
+      dec: 0,
+      jan: 0,
+      feb: 0,
+      mar: 0,
+      apr: 0,
+      may: 0,
+      jun: 0,
+      jul: 0,
+      aug: 0,
+    };
 
+    let ctx = document.querySelector("#chart-progress").getContext("2d");
     const myChart = new Chart(ctx, {
-      type: "bar",
+      type: "line",
       data: {
         datasets: [
           {
-            label: "Levels over time",
+            label: "Xp earned in a time period",
             data: [
-              { id: "Sales", nested: { value: 1500 } },
-              { id: "Purchases", nested: { value: 500 } },
+              { id: "sep", nested: { value: 1500 } },
+              { id: "oct", nested: { value: 500 } },
+              { id: "nov", nested: { value: 500 } },
+              { id: "dec", nested: { value: 500 } },
+              { id: "jan", nested: { value: 500 } },
+              { id: "feb", nested: { value: 500 } },
+              { id: "mar", nested: { value: 500 } },
+              { id: "apr", nested: { value: 500 } },
+              { id: "may", nested: { value: 500 } },
+              { id: "jun", nested: { value: 500 } },
+              { id: "jul", nested: { value: 500 } },
+              { id: "aug", nested: { value: 500 } },
             ],
             borderWidth: 1,
           },
