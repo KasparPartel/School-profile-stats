@@ -2,33 +2,32 @@ import { USERNAME } from "./constants.js";
 import { calculateLevel, levelNeededXP } from "./calculate.js";
 import fetchTransactions from "./fetchTransactions.js";
 import fetchProgresses from "./fetchProgresses.js";
-import { lorem } from "./data.js";
 
 (async () => {
+  // Graphql database calls
   const transactions = await fetchTransactions();
   const progresses = await fetchProgresses();
 
-  // Populates chart with placeholder lorem ipsum
-  // const chartsDOM = document.querySelectorAll(".chart");
-  // chartsDOM.forEach((el) => (el.textContent = lorem));
-
-  expToNextLevelChart();
+  // Charts generation
+  xpToNextLevelChart();
   progressChart();
 
-  async function expToNextLevelChart() {
-    let expAmount = progresses.reduce((prev, curr) => {
+  // expToNextLevelChart generates a filler chart for current level and xp needed
+  // to level up
+  async function xpToNextLevelChart() {
+    let xpAmount = progresses.reduce((prev, curr) => {
       const transaction = transactions.find(
         (obj) => obj.objectId === curr.objectId
       );
       return prev + transaction.amount;
     }, 0);
-    console.log(`${expAmount}xp`);
+    console.log(`${xpAmount}xp`);
 
-    const level = calculateLevel(expAmount);
+    const level = calculateLevel(xpAmount);
 
     const expNeeded = levelNeededXP(level + 1);
     const expInLevel = expNeeded - levelNeededXP(level);
-    const expInProcent = 100 - Math.round(expInLevel / (expNeeded - expAmount));
+    const expInProcent = 100 - Math.round(expInLevel / (expNeeded - xpAmount));
 
     const usernameDOM = document.querySelector(".username");
     usernameDOM.textContent = USERNAME;
@@ -37,12 +36,13 @@ import { lorem } from "./data.js";
     levelDOM.textContent = level;
 
     const expLeftDOM = document.querySelector(".exp-left");
-    expLeftDOM.textContent = expNeeded - expAmount;
+    expLeftDOM.textContent = expNeeded - xpAmount;
 
     const expFillerDOM = document.querySelector(".exp-filler");
     expFillerDOM.style.width = `${expInProcent}%`;
   }
 
+  // progressChart generates a chart of bar chart of xp earned over 12 months
   async function progressChart() {
     let monthsProgress = {
       sep: 0,
@@ -61,11 +61,11 @@ import { lorem } from "./data.js";
 
     let ctx = document.querySelector("#chart-progress").getContext("2d");
     const myChart = new Chart(ctx, {
-      type: "line",
+      type: "bar",
       data: {
         datasets: [
           {
-            label: "Xp earned in a time period",
+            label: "Xp earned in the last 12 months",
             data: [
               { id: "sep", nested: { value: 1500 } },
               { id: "oct", nested: { value: 500 } },
@@ -98,42 +98,3 @@ import { lorem } from "./data.js";
     });
   }
 })();
-
-/*  // Generator for generating chart labels
-    function* arrGenerator(start = 0, inc = 50000, limit = 578575) {
-      let i = start;
-      yield start;
-      while (i < limit) {
-        i += inc;
-        if (i > limit) {
-          yield limit;
-          return;
-        }
-        yield i;
-      }
-    }
-
-    const labels = [...arrGenerator()];
-
-    const data = {
-      labels,
-      datasets: [
-        {
-          label: "my first dataset",
-          backgroundColor: "rgb(255, 99, 132)",
-          borderColor: "rgb(255, 99, 132)",
-          data: [0, 10, 5, 2, 20, 30, 45],
-        },
-      ],
-    };
-
-    const config = {
-      type: "line",
-      data,
-      options: {},
-    };
-    const myChart = new chartsDOM(
-      document.querySelector(".progress-chart"),
-      config
-    );
-    console.log(labels); */
