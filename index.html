@@ -15,21 +15,25 @@
   </head>
 
   <body>
-    <div class="root">
+    <main>
       <h1><span class="username"></span> user profile</h1>
-      <section class="grid-container">
-        <div class="chart-progress">
-          <canvas id="chart-progress"></canvas>
-        </div>
-        <div class="chart"></div>
+      <div class="container">
         <div class="chart-exp">
           <div class="exp-filler"></div>
           <div class="info">Level: <span class="level"></span></div>
           <div class="info">
-            Exp to next level: <span class="exp-left"></span>
+            xp to next level: <span class="exp-left"></span>
           </div>
         </div>
-      </section>
-    </div>
+        <section class="grid-wrapper">
+          <div class="chart-progress">
+            <canvas id="chart-progress"></canvas>
+          </div>
+          <div class="chart-levels">
+            <canvas id="chart-levels"></canvas>
+          </div>
+        </section>
+      </div>
+    </main>
   </body>
 </html>

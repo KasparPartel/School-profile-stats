@@ -3,6 +3,21 @@ import { calculateLevel, levelNeededXP } from "./calculate.js";
 import fetchTransactions from "./fetchTransactions.js";
 import fetchProgresses from "./fetchProgresses.js";
 
+const months = [
+  "jan",
+  "feb",
+  "mar",
+  "apr",
+  "may",
+  "jun",
+  "jul",
+  "aug",
+  "sep",
+  "oct",
+  "nov",
+  "dec",
+];
+
 (async () => {
   // Graphql database calls
   const transactions = await fetchTransactions();
@@ -11,6 +26,7 @@ import fetchProgresses from "./fetchProgresses.js";
   // Charts generation
   xpToNextLevelChart();
   progressChart();
+  levelsChart();
 
   // expToNextLevelChart generates a filler chart for current level and xp needed
   // to level up
@@ -44,11 +60,9 @@ import fetchProgresses from "./fetchProgresses.js";
 
   // progressChart generates a chart of bar chart of xp earned over 12 months
   async function progressChart() {
-    let monthsProgress = {
-      sep: 0,
-      oct: 0,
-      nov: 0,
-      dec: 0,
+    console.log("------- Generating progress chart -------");
+
+    const monthsXP = {
       jan: 0,
       feb: 0,
       mar: 0,
@@ -57,29 +71,87 @@ import fetchProgresses from "./fetchProgresses.js";
       jun: 0,
       jul: 0,
       aug: 0,
+      sep: 0,
+      oct: 0,
+      nov: 0,
+      dec: 0,
     };
 
+    progresses.forEach((el) => {
+      const d = new Date(el.createdAt);
+      const transaction = transactions.find(
+        (obj) => obj.objectId === el.objectId
+      );
+      monthsXP[months[d.getMonth()]] += transaction.amount;
+    });
+
     let ctx = document.querySelector("#chart-progress").getContext("2d");
+
     const myChart = new Chart(ctx, {
       type: "bar",
       data: {
         datasets: [
           {
-            label: "Xp earned in the last 12 months",
-            data: [
-              { id: "sep", nested: { value: 1500 } },
-              { id: "oct", nested: { value: 500 } },
-              { id: "nov", nested: { value: 500 } },
-              { id: "dec", nested: { value: 500 } },
-              { id: "jan", nested: { value: 500 } },
-              { id: "feb", nested: { value: 500 } },
-              { id: "mar", nested: { value: 500 } },
-              { id: "apr", nested: { value: 500 } },
-              { id: "may", nested: { value: 500 } },
-              { id: "jun", nested: { value: 500 } },
-              { id: "jul", nested: { value: 500 } },
-              { id: "aug", nested: { value: 500 } },
-            ],
+            label: "Total xp earned in all months",
+            data: Object.entries(monthsXP).map((el) => {
+              return { id: el[0], nested: { value: el[1] } };
+            }),
+            borderWidth: 1,
+          },
+        ],
+      },
+      options: {
+        parsing: {
+          xAxisKey: "id",
+          yAxisKey: "nested.value",
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+          },
+        },
+      },
+    });
+  }
+
+  // levelsChart generates a chart of line chart of levels earned over 12 months
+  async function levelsChart() {
+    console.log("------- Generating levels chart -------");
+
+    const monthsXP = {
+      jan: 0,
+      feb: 0,
+      mar: 0,
+      apr: 0,
+      may: 0,
+      jun: 0,
+      jul: 0,
+      aug: 0,
+      sep: 0,
+      oct: 0,
+      nov: 0,
+      dec: 0,
+    };
+
+    progresses.forEach((el) => {
+      const d = new Date(el.createdAt);
+      const transaction = transactions.find(
+        (obj) => obj.objectId === el.objectId
+      );
+      monthsXP[months[d.getMonth()]] += transaction.amount;
+    });
+
+    let ctx = document.querySelector("#chart-levels").getContext("2d");
+
+    const myChart = new Chart(ctx, {
+      type: "doughnut",
+      data: {
+        datasets: [
+          {
+            label: "Total levels earned in all months",
+            data: Object.entries(monthsXP).map((el) => {
+              return { id: el[0], nested: { value: el[1] } };
+            }),
             borderWidth: 1,
           },
         ],
