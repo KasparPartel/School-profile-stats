@@ -20,7 +20,7 @@ const variables = {
 
 const regex = /\bpiscine-go/;
 
-const fetchTransactions = async (onlyHighest) => {
+const fetchTransactions = async () => {
   let results = await fetchAllDataRecursive(
     URL,
     query,
@@ -32,7 +32,7 @@ const fetchTransactions = async (onlyHighest) => {
 
   const groupedResults = groupBy(filteredResults, "objectId");
 
-  // filterHighest filters out highest object
+  // filterHighest filters out the highest object
   const filterHighest = (arrOfObjArr, property) => {
     return Object.keys(arrOfObjArr).map((key) => {
       const arr = arrOfObjArr[key];

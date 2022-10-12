@@ -1,5 +1,6 @@
 :root {
   font-size: 16px;
+  font-family: "Courier New", Courier, monospace;
 }
 
 main {
@@ -10,11 +11,25 @@ main {
 }
 
 .grid-wrapper {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(700px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
 
-  row-gap: 1.5em;
-  column-gap: 5em;
+  gap: 2em;
+}
+
+.chart-progress {
+  flex: 1 0 400px;
+  text-align: center;
+}
+
+.chart-audit {
+  flex: 0 1 500px;
+  text-align: center;
+}
+
+#chart-progress,
+#chart-audit {
+  max-width: 100%;
 }
 
 .username {
