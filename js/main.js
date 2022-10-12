@@ -20,32 +20,17 @@ const months = [
 ];
 
 (async () => {
-  // Graphql database calls
+  // Wait for graphql database calls
   const transactions = await fetchTransactions();
   const progresses = await fetchProgresses();
   const auditXP = await fetchAuditXP();
 
-  let downXP = auditXP.reduce((prev, curr) => {
-    if (curr.type === "down") {
-      return prev + Math.floor(curr.amount);
-    }
-    return prev;
-  }, 0);
-
-  const upXP = auditXP.reduce((prev, curr) => {
-    if (curr.type === "up") {
-      return prev + Math.floor(curr.amount);
-    }
-    return prev;
-  }, 0);
-
-  // Charts generation
+  // Generate charts asynchronously
   xpToNextLevelChart();
   progressChart();
   auditsChart();
 
-  // expToNextLevelChart generates a filler chart for current level and xp needed
-  // to level up
+  // xpToNextLevelChart generates a filler bar chart of level and xp left to next level
   async function xpToNextLevelChart() {
     let xpAmount = progresses.reduce((prev, curr) => {
       const transaction = transactions.find(
@@ -53,7 +38,6 @@ const months = [
       );
       return prev + transaction.amount;
     }, 0);
-    // console.log(`${xpAmount}xp`);
 
     const level = calculateLevel(xpAmount);
 
@@ -61,6 +45,7 @@ const months = [
     const expInLevel = expNeeded - levelNeededXP(level);
     const expInProcent = 100 - Math.round(expInLevel / (expNeeded - xpAmount));
 
+    // Write data to chart
     const usernameDOM = document.querySelector(".username");
     usernameDOM.textContent = USERNAME;
 
@@ -78,6 +63,7 @@ const months = [
   async function progressChart() {
     console.log("------- Generating progress chart -------");
 
+    // Object to keep track of xp for every month
     const monthsXP = {
       jan: 0,
       feb: 0,
@@ -93,6 +79,7 @@ const months = [
       dec: 0,
     };
 
+    // Calculate xp for every month
     progresses.forEach((el) => {
       const d = new Date(el.createdAt);
       const transaction = transactions.find(
@@ -103,7 +90,7 @@ const months = [
 
     let ctx = document.querySelector("#chart-progress").getContext("2d");
 
-    const myChart = new Chart(ctx, {
+    new Chart(ctx, {
       type: "bar",
       data: {
         datasets: [
@@ -134,16 +121,32 @@ const months = [
   async function auditsChart() {
     console.log("------- Generating audits chart -------");
 
+    // Calculate xp amount of audits received
+    let receivedXP = auditXP.reduce((prev, curr) => {
+      if (curr.type === "down") {
+        return prev + Math.floor(curr.amount);
+      }
+      return prev;
+    }, 0);
+
+    // Calculate xp amount of audits done
+    const doneXP = auditXP.reduce((prev, curr) => {
+      if (curr.type === "up") {
+        return prev + Math.floor(curr.amount);
+      }
+      return prev;
+    }, 0);
+
     let ctx = document.querySelector("#chart-audit").getContext("2d");
 
-    const myChart = new Chart(ctx, {
+    new Chart(ctx, {
       type: "doughnut",
       data: {
         labels: ["Received", "Done"],
         datasets: [
           {
             label: "Audit ratio",
-            data: [downXP, upXP],
+            data: [receivedXP, doneXP],
             backgroundColor: ["rgb(255, 99, 132)", "rgb(54, 162, 235)"],
           },
         ],

@@ -1,8 +1,9 @@
-import {URL, USERNAME} from "./constants.js";
+import { URL, USERNAME } from "./constants.js";
 
-import {fetchAllDataRecursive} from "./fetch.js";
-import {filterResultsRegex} from "./helpers/filter.js";
+import { fetchAllDataRecursive } from "./fetch.js";
+import { filterResultsRegex } from "./helpers/filter.js";
 
+// GRAPHQL query
 const query = `query ($username: String, $type: String) {
   user(where: { login: { _eq: $username }}) {
     progresses(where: {object: {type: {_eq: $type}}}) {
@@ -14,41 +15,42 @@ const query = `query ($username: String, $type: String) {
   }
 }`;
 
+// Different variables fo queries
 const variablesProject = {
-    username: USERNAME,
-    type: "project",
+  username: USERNAME,
+  type: "project",
 };
 const variablesPiscine = {
-    username: USERNAME,
-    type: "piscine",
+  username: USERNAME,
+  type: "piscine",
 };
 
 const regex = /\bpiscine-go/;
 
 const fetchProgresses = async () => {
-    const fetchData = async () => {
-        let resultsProjects = await fetchAllDataRecursive(
-            URL,
-            query,
-            variablesProject,
-            "progresses"
-        );
-        let resultsPiscine = await fetchAllDataRecursive(
-            URL,
-            query,
-            variablesPiscine,
-            "progresses"
-        );
+  const fetchData = async () => {
+    let resultsProjects = await fetchAllDataRecursive(
+      URL,
+      query,
+      variablesProject,
+      "progresses"
+    );
+    let resultsPiscine = await fetchAllDataRecursive(
+      URL,
+      query,
+      variablesPiscine,
+      "progresses"
+    );
 
-        return resultsProjects.concat(resultsPiscine);
-    };
+    return resultsProjects.concat(resultsPiscine);
+  };
 
-    const results = await fetchData();
+  const results = await fetchData();
 
-    let filteredResults = results.filter((obj) => obj.isDone === true);
-    filteredResults = filterResultsRegex(filteredResults, "path", regex);
+  let filteredResults = results.filter((obj) => obj.isDone === true);
+  filteredResults = filterResultsRegex(filteredResults, "path", regex);
 
-    return filteredResults;
+  return filteredResults;
 };
 
 export default fetchProgresses;

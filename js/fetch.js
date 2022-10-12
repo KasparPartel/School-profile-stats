@@ -19,7 +19,8 @@ export const fetchGraphql = async (url, query, variables) => {
   }
 };
 
-// fetchAllDataRecursive fetches all data from graphql recursively because graphql payload length cannot be over 50
+// fetchAllDataRecursive fetches all data from graphql recursively
+// because graphql payload length cannot be over 50
 export const fetchAllDataRecursive = async (
   URL,
   query,
@@ -28,8 +29,11 @@ export const fetchAllDataRecursive = async (
   arr = []
 ) => {
   const data = await fetchGraphql(URL, query, variables);
+
+  // Concat previous results with new ones
   arr = [...arr, ...data.data.user[0][table]];
 
+  // Recursion logic
   if (data.data.user[0][table].length === 50) {
     variables.start += 50;
     return fetchAllDataRecursive(URL, query, variables, table, arr);
