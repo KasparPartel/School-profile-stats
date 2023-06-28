@@ -1,11 +1,15 @@
+const jwt = sessionStorage.getItem("jwt")
+
+const headers = new Headers();
+headers.set("Authorization", `Bearer ${jwt}`)
+headers.set("Content-Type", "application/json")
+
 // fetchGraphql fetches provided query from graphql using async/await method
 export const fetchGraphql = async (url, query, variables) => {
   try {
     const res = await fetch(url, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers,
       body: JSON.stringify({
         query,
         variables,

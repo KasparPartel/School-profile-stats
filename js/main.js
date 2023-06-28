@@ -1,25 +1,18 @@
-import { USERNAME } from "./constants.js";
-import { calculateLevel, levelNeededXP } from "./calculate.js";
+import {MONTHS, USERNAME} from "./constants.js";
+import {calculateLevel, levelNeededXP} from "./calculate.js";
 import fetchTransactions from "./fetchTransactions.js";
 import fetchProgresses from "./fetchProgresses.js";
 import fetchAuditXP from "./fetchAuditXP.js";
 
-const months = [
-  "jan",
-  "feb",
-  "mar",
-  "apr",
-  "may",
-  "jun",
-  "jul",
-  "aug",
-  "sep",
-  "oct",
-  "nov",
-  "dec",
-];
-
 (async () => {
+  const jwt = sessionStorage.getItem("jwt")
+
+  if (jwt == null) {
+    const origin = location.origin
+    location.replace(origin + "/School-profile-stats/login.html")
+    return
+  }
+
   // Wait for graphql database calls
   const transactions = await fetchTransactions();
   const progresses = await fetchProgresses();
@@ -43,7 +36,7 @@ const months = [
 
     const expNeeded = levelNeededXP(level + 1);
     const expInLevel = expNeeded - levelNeededXP(level);
-    const expInProcent = 100 - Math.round(expInLevel / (expNeeded - xpAmount));
+    const expInPercent = 100 - Math.round(expInLevel / (expNeeded - xpAmount));
 
     // Write data to chart
     const usernameDOM = document.querySelector(".username");
@@ -56,7 +49,7 @@ const months = [
     expLeftDOM.textContent = (expNeeded - xpAmount).toString();
 
     const expFillerDOM = document.querySelector(".exp-filler");
-    expFillerDOM.style.width = `${expInProcent}%`;
+    expFillerDOM.style.width = `${expInPercent}%`;
   }
 
   // progressChart generates a chart of bar chart of xp earned over 12 months
@@ -85,7 +78,7 @@ const months = [
       const transaction = transactions.find(
         (obj) => obj.objectId === el.objectId
       );
-      monthsXP[months[d.getMonth()]] += transaction.amount;
+      monthsXP[MONTHS[d.getMonth()]] += transaction.amount;
     });
 
     let ctx = document.querySelector("#chart-progress").getContext("2d");

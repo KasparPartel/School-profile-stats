@@ -1,0 +1,24 @@
+h1 {
+
+}
+
+section {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+
+  input {
+    padding: 1em 0.5em;
+  }
+
+  button {
+    padding: 1em 0.5em;
+  }
+}

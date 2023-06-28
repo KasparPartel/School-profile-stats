@@ -15,7 +15,7 @@ const query = `query ($username: String, $type: String) {
   }
 }`;
 
-// Different variables fo queries
+// Different variables for queries
 const variablesProject = {
   username: USERNAME,
   type: "project",

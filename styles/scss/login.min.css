@@ -1,0 +1,16 @@
+section {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center; }
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1em; }
+  .form input {
+    padding: 1em 0.5em; }
+  .form button {
+    padding: 1em 0.5em; }
+
+/*# sourceMappingURL=login.min.css.map */
